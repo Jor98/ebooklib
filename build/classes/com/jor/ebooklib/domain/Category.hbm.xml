@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.jor.ebooklib.domain.Category" table="category">
+		<id name="category_id" column="category_id">
+			<generator class="native"></generator>
+		</id>
+		
+		<property name="category_name"/>
+		
+		<set name="cate_books" table="book_category">
+			<key column="category_id"></key>
+			<many-to-many class="com.jor.ebooklib.domain.Book" column="book_id" lazy="false"></many-to-many>
+		</set>
+		
+		
+	</class>
+</hibernate-mapping>

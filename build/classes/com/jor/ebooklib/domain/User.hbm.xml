@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.jor.ebooklib.domain.User" table="user">
+		<id name="user_id" column="user_id">
+			<generator class="native"></generator>
+		</id>
+		
+		<property name="user_number"/>
+		<property name="user_account"/>
+		<property name="user_password"/>
+		<property name="user_name"/>
+		<property name="user_image"/>
+		<property name="user_birthday"/>
+		<property name="user_email"/>
+		<property name="user_gender"/>
+		<property name="user_borrowcount"/>
+		<property name="user_state"/>
+				
+		<set name="borrows">
+			<key column="borrow_user_id"></key>
+			<one-to-many class="com.jor.ebooklib.domain.Borrow" />
+		</set>
+		
+		
+	</class>
+</hibernate-mapping>

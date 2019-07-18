@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 配置Struts2的常量 -->
+	<constant name="struts.action.extension" value="action"/>
+	<!-- 配置Struts2中所上传的文件的总大小 -->
+	<constant name="struts.multipart.maxSize" value="5242880"/>
+	
+	<package name="ebooklib" extends="struts-default" namespace="/">
+	
+		<action name="admin_*" class="adminAction" method="{1}">
+			<result name="login">/admin_login.jsp</result>
+			<result name="loginSuccess" type="redirectAction">user_findAll.action</result>
+		</action>
+		
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="login">/user/login.jsp</result>
+			<result name="logout">/user/delicious.jsp</result>
+			<result name="changePassword">/user/password.jsp</result>
+			<result name="changePasswordSuccess">/user/information.jsp</result>
+			<result name="registUserSuccess" type="redirectAction">user_login.action</result>
+			<result name="loginSuccess" type="redirect">/user/delicious.jsp</result>
+			<result name="editUserSuccess" type="redirect">/user/information.jsp</result>
+			<result name="borrowBooksSuccess" type="redirectAction">book_findAll.action</result>
+			<result name="userBorrowBooksSuccess" type="redirectAction">book_findAllBook.action</result>
+			<result name="registSuccess" type="redirectAction">user_findAll.action</result>
+			<result name="deleteSuccess" type="redirectAction">user_findAll.action</result>
+			<result name="restartSuccess" type="redirectAction">user_findAll.action</result>
+			<result name="updateSuccess" type="redirectAction">user_findAll.action</result>
+			<result name="editSuccess" type="redirectAction">user_findAll.action</result>
+			<result name="findAll">/admin_userManage.jsp</result>
+			<result name="input">/admin_userManage.jsp</result>
+			
+			
+			<interceptor-ref name="defaultStack">
+				<param name="fileUpload.maximumSize">2097152</param>
+				<param name="fileUpload.allowedExtensions">.jpg,.png,.jpeg</param>
+			</interceptor-ref>
+		</action>
+		
+		<action name="book_*" class="bookAction" method="{1}">
+			<result name="registSuccess" type="redirectAction">book_findAll.action</result>
+			<result name="deleteSuccess" type="redirectAction">book_findAll.action</result>
+			<result name="restartSuccess" type="redirectAction">book_findAll.action</result>
+			<result name="updateSuccess" type="redirectAction">book_findAll.action</result>
+			<result name="addBooksSuccess" type="redirectAction">book_findAll.action</result>
+			<result name="addcategorySuccess" type="redirectAction">book_findAll.action</result>
+			<result name="delcategorySuccess" type="redirectAction">book_findAll.action</result>
+			<result name="editSuccess">/book_edit.jsp</result>
+			<result name="findAll">/admin_bookManage.jsp</result>
+			<result name="findAllBook">/user/search.jsp</result>
+			<result name="bookDetails">/user/bookdetails.jsp</result>
+			
+			<interceptor-ref name="defaultStack">
+				<param name="fileUpload.maximumSize">2097152</param>
+				<param name="fileUpload.allowedExtensions">.jpg,.png,.jpeg</param>
+			</interceptor-ref>
+		</action>
+		
+		<action name="borrow_*" class="borrowAction" method="{1}">
+			<result name="returnSuccess" type="redirectAction">user_findAll.action</result>
+			<result name="returnbookUser" >/user/borrowbook.jsp</result>
+		</action>
+		
+		<action name="category_*" class="categoryAction" method="{1}">
+			<result name="addSuccess" type="redirectAction">book_findAll.action</result>
+			<result name="findAll">/category_list.jsp</result>
+			
+		</action>
+	
+	</package>
+</struts>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.jor.ebooklib.domain.Borrow" table="borrow">
+		<id name="borrow_id" column="borrow_id">
+			<generator class="native"></generator>
+		</id>
+		
+		<property name="borrow_date" />
+		<property name="date_to_return" />
+		<property name="date_return" />
+		<property name="is_return"/>
+		<property name="is_overtime"/>
+		
+		<many-to-one name="user" class="com.jor.ebooklib.domain.User" column="borrow_user_id" lazy="false"></many-to-one>
+		<!-- <one-to-one name="books" class="com.jor.ebooklib.domain.Books" property-ref="books_id" cascade="save-update"></one-to-one>-->
+		<many-to-one name="books" class="com.jor.ebooklib.domain.Books" column="borrow_books_id" lazy="false"></many-to-one>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.jor.ebooklib.domain.Book" table="book">
+		<id name="book_id" column="book_id">
+			<generator class="native"></generator>
+		</id>
+		
+		<property name="book_name"/>
+		<property name="book_author"/>
+		<property name="book_isbn"/>
+		<property name="book_publishing"/>
+		<property name="book_synopsis"/>
+		<property name="book_image"/>
+		<property name="book_total"/>
+		<property name="book_residue"/>
+		<property name="book_sortnumber"/>
+		<property name="book_state"/>
+		
+		<set name="bookss">
+			<key column="books_book_id"></key>
+			<one-to-many class="com.jor.ebooklib.domain.Books"/>
+		</set>
+		
+		<set name="book_cates" table="book_category">
+			<key column="book_id"></key>
+			<many-to-many class="com.jor.ebooklib.domain.Category" column="category_id"></many-to-many>
+		</set>
+		
+		
+	</class>
+</hibernate-mapping>

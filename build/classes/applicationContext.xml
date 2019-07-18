@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!-- 开启属性注入的注解============================= -->
+	<context:annotation-config/>
+	
+	<!-- 引入外部属性文件=============================== -->
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	
+	<!-- 配置C3P0连接池=============================== -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driverClass}"/>
+		<property name="jdbcUrl" value="${jdbc.url}"/>
+		<property name="user" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	<!-- 配置SessionFactory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<!-- 注入连接池 -->
+		<property name="dataSource" ref="dataSource"/>
+		<!-- 配置Hibernate的相关属性 -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+		
+		<!-- 引入映射文件 -->
+		<property name="mappingResources">
+			<list>
+				<value>com/jor/ebooklib/domain/User.hbm.xml</value>
+				<value>com/jor/ebooklib/domain/Admin.hbm.xml</value>
+				<value>com/jor/ebooklib/domain/Borrow.hbm.xml</value>
+				<value>com/jor/ebooklib/domain/Book.hbm.xml</value>
+				<value>com/jor/ebooklib/domain/Books.hbm.xml</value>
+				<value>com/jor/ebooklib/domain/Category.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 配置Action -->
+	<bean id="adminAction" class="com.jor.ebooklib.web.action.AdminAction" scope="prototype">
+		<property name="adminService" ref="adminService"></property>
+	</bean>
+	
+	<!-- 配置Service -->
+	<bean id="adminService" class="com.jor.ebooklib.service.impl.AdminServiceImpl">
+		<property name="adminDao" ref="adminDao"/>
+	</bean>
+	
+	<!-- 配置DAO -->
+	<bean id="adminDao" class="com.jor.ebooklib.dao.impl.AdminDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 配置读者相关事务 -->
+	<bean id="userAction" class="com.jor.ebooklib.web.action.UserAction" scope="prototype">
+		<property name="userService" ref="userService"/>
+		<property name="booksService" ref="booksService"/>
+		<property name="borrowService" ref="borrowService"/>
+	</bean>
+	<bean id="userService" class="com.jor.ebooklib.service.impl.UserServiceImpl">
+		<property name="userDao" ref="userDao"/>
+	</bean>
+	<bean id="userDao" class="com.jor.ebooklib.dao.impl.UserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 配置借阅相关事务 -->
+	<bean id="borrowAction" class="com.jor.ebooklib.web.action.BorrowAction" scope="prototype">
+		<property name="borrowService" ref="borrowService"/>
+	</bean>
+	<bean id="borrowService" class="com.jor.ebooklib.service.impl.BorrowServiceImpl">
+		<property name="borrowDao" ref="borrowDao"/>
+	</bean>
+	<bean id="borrowDao" class="com.jor.ebooklib.dao.impl.BorrowDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 配置书本相关事务 -->
+	<bean id="bookAction" class="com.jor.ebooklib.web.action.BookAction" scope="prototype">
+		<property name="bookService" ref="bookService"/>
+		<property name="booksService" ref="booksService"/>
+		<property name="categoryService" ref="categoryService"/>
+	</bean>
+	<bean id="bookService" class="com.jor.ebooklib.service.impl.BookServiceImpl">
+		<property name="bookDao" ref="bookDao"/>
+	</bean>
+	<bean id="bookDao" class="com.jor.ebooklib.dao.impl.BookDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 配置实体书相关业务 -->
+	<bean id="booksAction" class="com.jor.ebooklib.web.action.BooksAction" scope="prototype">
+		<property name="booksService" ref="booksService"/>
+	</bean>
+	<bean id="booksService" class="com.jor.ebooklib.service.impl.BooksServiceImpl">
+		<property name="booksDao" ref="booksDao"/>
+	</bean>
+	<bean id="booksDao" class="com.jor.ebooklib.dao.impl.BooksDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 配置书本类型相关业务 -->
+	<bean id="categoryAction" class="com.jor.ebooklib.web.action.CategoryAction" scope="prototype">
+		<property name="categoryService" ref="categoryService"/>
+	</bean>
+	<bean id="categoryService" class="com.jor.ebooklib.service.impl.CategoryServiceImpl">
+		<property name="categoryDao" ref="categoryDao"/>
+	</bean>
+	<bean id="categoryDao" class="com.jor.ebooklib.dao.impl.CategoryDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 开启注解事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+</beans>
